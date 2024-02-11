@@ -7,6 +7,7 @@ export const INTENTS = [
   GatewayIntentBits.Guilds,
   GatewayIntentBits.GuildMessages,
   GatewayIntentBits.MessageContent,
+  GatewayIntentBits.GuildVoiceStates,
 ];
 export const COMMAND_CHANNEL = "1205848410997915679";
 export const VOICE_TEST_CHANNEL = "1205854929772613632";
