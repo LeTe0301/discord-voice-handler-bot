@@ -1,6 +1,10 @@
-import { joinVoiceChannel } from "@discordjs/voice";
 import * as Constants from "../utils/Constants.js";
 import * as Commands from "../utils/Commands.js";
+import {
+  createVoiceConnection,
+  getVoiceConnection,
+  destroyVoiceConnection,
+} from "./VoiceConnectionHandler.js";
 
 let voiceConnection;
 
@@ -12,7 +16,7 @@ export default function handleCommand(message, client) {
   if (command === Commands.COMMAND_JOIN) {
     if (message.member.voice.channel) {
       try {
-        voiceConnection = joinVoiceChannel({
+        createVoiceConnection({
           channelId: message.member.voice.channelId,
           guildId: Constants.GUILD_ID,
           adapterCreator: client.guilds.cache.get("1056733056909721660")
@@ -36,8 +40,7 @@ export default function handleCommand(message, client) {
       );
     }
   } else if (command === Commands.COMMAND_LEAVE) {
-    // console.log(voiceConnection);
-    voiceConnection.disconnect();
+    destroyVoiceConnection();
     console.log(
       "Bot has left the voice channel:",
       message.member.voice.channel.name
