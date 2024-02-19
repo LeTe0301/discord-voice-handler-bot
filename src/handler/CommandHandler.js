@@ -2,11 +2,12 @@ import * as Constants from "../utils/Constants.js";
 import * as Commands from "../utils/Commands.js";
 import {
   createVoiceConnection,
-  getVoiceConnection,
   destroyVoiceConnection,
+  listen,
+  stfu,
 } from "./VoiceConnectionHandler.js";
 
-let voiceConnection;
+let bListen = false;
 
 export default function handleCommand(message, client) {
   if (message.channelId !== Constants.COMMAND_CHANNEL) return;
@@ -15,6 +16,7 @@ export default function handleCommand(message, client) {
 
   if (command === Commands.COMMAND_JOIN) {
     if (message.member.voice.channel) {
+      console.log(message.member.voice.channelId);
       try {
         createVoiceConnection({
           channelId: message.member.voice.channelId,
@@ -45,5 +47,17 @@ export default function handleCommand(message, client) {
       "Bot has left the voice channel:",
       message.member.voice.channel.name
     );
+  }
+}
+export function handleVoiceCommand(message) {
+  if (message.channelId !== Constants.COMMAND_CHANNEL) return;
+  if (!message.content.startsWith("!") || message.author.bot) return;
+  const command = message.content.toLowerCase();
+  if (command === Commands.COMMAND_LISTEN) {
+    console.log(message.author);
+    listen(message.author.id);
+    return bListen;
+  } else if (command === Commands.COMMAND_STFU) {
+    stfu();
   }
 }
