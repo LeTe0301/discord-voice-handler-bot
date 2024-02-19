@@ -2,3 +2,4 @@ node_modules
 package.json
 config.json
 jsconfig.json
+google-speech-to-text-api-authentication.json
