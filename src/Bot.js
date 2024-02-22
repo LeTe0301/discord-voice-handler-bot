@@ -1,4 +1,4 @@
-import { Client } from "discord.js";
+import { ChannelType, Client } from "discord.js";
 import {
   EndBehaviorType,
   createDefaultAudioReceiveStreamOptions,
@@ -11,6 +11,12 @@ import {
   getVoiceConnection,
 } from "./handler/VoiceConnectionHandler.js";
 import pkg from "@discordjs/opus";
+import {
+  findChannelById,
+  findChannelByName,
+} from "./server/service/ChannelService.js";
+import { moveUsertoChannel } from "./server/manager/UserManager.js";
+import findUserById, { findUserByName } from "./server/service/UserService.js";
 const { OpusEncoder } = pkg;
 const token = config.DISCORD_TOKEN;
 const client = new Client({
@@ -30,45 +36,33 @@ client.once("ready", async () => {
       .voiceAdapterCreator,
     selfDeaf: false,
   });
+  // test if channel can be found by either name or id, passed
+  // console.log(
+  //   await findChannelById(
+  //     await server,
+  //     ChannelType.GuildVoice,
+  //     "1205854929772613632"
+  //   ),
+  //   await findChannelByName(await server, ChannelType.GuildVoice, "BotChannel")
+  // );
+
+  // test if user can be found by either name or id, passed
+  // console.log(
+  //   await findUserById(await server, "241600149845966860"),
+  //   await findUserByName(await server, "zrennare")
+  // );
+
+  // test if user can be moved to a certain channel
+  moveUsertoChannel(
+    await findUserById(await server, "241600149845966860"),
+    await findChannelById(
+      await server,
+      ChannelType.GuildVoice,
+      "1205854929772613632"
+    )
+  );
 });
 client.on("messageCreate", (message) => {
   handleCommand(message, client);
   handleVoiceCommand(message);
 });
-// client.on("voiceStateUpdate", (oldState, newState) => {
-//   server = newState.guild;
-//   oVoiceConnection = getVoiceConnection();
-//   receiver = oVoiceConnection.receiver;
-
-//   console.log("OldState: ", oldState.id);
-//   console.log("NewState: ", newState.id);
-
-//   if (!newState.member.user.bot && bListen === true) {
-//     // && oldState.channel !== newState.channel
-//     const oAudioReceiveStream = receiver.subscribe(newState.id);
-//     const oAudioOptions = createDefaultAudioReceiveStreamOptions();
-//     console.log(receiver.subscribe(newState.id, oAudioOptions));
-//     const encoder = new OpusEncoder(48000, 2);
-
-//     oAudioReceiveStream.on("data", (chunk) => {
-//       // const encoded = encoder.encode(chunk);
-//       console.log(`Received ${chunk.length} bytes of data.`);
-//     });
-//     oAudioReceiveStream.on("end", () => {
-//       console.log("no more data");
-//     });
-//   } else if (!newState.member.user.bot && bListen === false) {
-//     receiver.unsubscribe();
-//   }
-// });
-// client.on("messageCreate", (message) => {
-//   handleJoinCommand(message, client);
-// });
-
-// Create the encoder.
-// Specify 48kHz sampling rate and 2 channel size.
-// const encoder = new OpusEncoder(48000, 2);
-
-// // Encode and decode.
-// const encoded = encoder.encode(buffer);
-// const decoded = encoder.decode(encoded);

@@ -8,7 +8,7 @@ import { createWriteStream } from "fs";
 import { finished } from "node:stream/promises";
 import * as prism from "prism-media";
 import convertOGGtoMP3 from "./ConvertOGGtoMP3.js";
-import { sendMP3toGSTT } from "./SendMP3toGSTT.js";
+import { sendMP3toGSTT } from "../api/google/SendMP3toGSTT.js";
 let oVoiceConnection;
 let oAudioReceiveStream;
 let receiver;

@@ -2,7 +2,6 @@ import { spawn } from "child_process";
 import ffmpegPath from "ffmpeg-static";
 import path from "path";
 import fs from "fs";
-import speech from "@google-cloud/speech";
 
 export default async function convertOGGtoMP3(oggFilePath) {
   return new Promise((resolve, reject) => {
@@ -32,7 +31,6 @@ export default async function convertOGGtoMP3(oggFilePath) {
       mp3FilePath,
     ];
 
-    // const ffmpeg = spawn(ffmpegPath, ["-i", oggFilePath, mp3FilePath]);
     const ffmpeg = spawn(ffmpegPath, sffmpegCommand);
 
     ffmpeg.stdout.on("data", (data) => {
@@ -42,13 +40,11 @@ export default async function convertOGGtoMP3(oggFilePath) {
     ffmpeg.stderr.on("data", (data) => {
       console.error(`stderr: ${data}`);
     });
-    // hellu ist
-    // perfekt danke
+
     ffmpeg.on("close", (code) => {
       if (code === 0) {
         console.log(`MP3 file saved at: ${mp3FilePath}`);
         resolve(mp3FilePath);
-        const client = new speech.SpeechClient();
       } else {
         reject(new Error(`Failed to convert ${oggFilePath}`));
       }

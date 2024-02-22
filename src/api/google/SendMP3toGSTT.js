@@ -22,7 +22,7 @@ export async function sendMP3toGSTT(mp3FilePath) {
       .join("\n");
 
     console.log("Transcription:", transcription);
-    // Do something with the transcription (e.g., send it back to Discord)
+    return transcription;
   } catch (error) {
     console.error("Error:", error);
   }

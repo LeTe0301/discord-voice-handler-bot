@@ -1,0 +1,3 @@
+/* Get the voice data as text
+   and map it dependent on key words to certain actions
+*/
