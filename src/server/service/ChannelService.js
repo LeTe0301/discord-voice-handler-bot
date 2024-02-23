@@ -6,18 +6,19 @@ export async function findChannelByName(server, type, channelName) {
       requestedChannels = channels.filter((channel) => {
         return channel.type == type && channel.name == channelName;
       });
-      // .map((channel) => {
-      //   return channel;
-      // });
     })
     .catch(console.error);
-  return requestedChannels;
+  if (requestedChannels.size > 1) {
+    return requestedChannels;
+  } else {
+    return requestedChannels.find((channel) => channel.name == channelName);
+  }
 }
 
 export async function findChannelById(server, type, channelId) {
-  console.log(server.channels);
-  const channel = await server.channels.fetch().then((channels) => {
-    return channels.filter((channel) => {
+  let channel;
+  await server.channels.fetch().then((channels) => {
+    channel = channels.find((channel) => {
       let channelPredicate = true;
       if (type) {
         channelPredicate = channel.type == type;

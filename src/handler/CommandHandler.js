@@ -49,7 +49,7 @@ export default function handleCommand(message, client) {
     );
   }
 }
-export function handleVoiceCommand(message) {
+export function handleVoiceRecordCommand(message) {
   if (message.channelId !== Constants.COMMAND_CHANNEL) return;
   if (!message.content.startsWith("!") || message.author.bot) return;
   const command = message.content.toLowerCase();
@@ -57,6 +57,16 @@ export function handleVoiceCommand(message) {
     console.log(message.author);
     listen(message.author.id);
     return bListen;
+  } else if (command === Commands.COMMAND_STFU) {
+    stfu();
+  }
+}
+export function hnadleVoiceUpdateCommand(message) {
+  if (message.channelId !== Constants.COMMAND_CHANNEL) return;
+  if (!message.content.startsWith("!") || message.author.bot) return;
+  const command = message.content.toLowerCase();
+  if (command === Commands.COMMAND_MUTE_USER) {
+    console.log("true");
   } else if (command === Commands.COMMAND_STFU) {
     stfu();
   }

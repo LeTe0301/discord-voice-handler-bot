@@ -5,7 +5,9 @@ import {
 } from "@discordjs/voice";
 import * as Constants from "./utils/Constants.js";
 import config from "./config.json" assert { type: "json" };
-import handleCommand, { handleVoiceCommand } from "./handler/CommandHandler.js";
+import handleCommand, {
+  handleVoiceRecordCommand,
+} from "./handler/CommandHandler.js";
 import {
   createVoiceConnection,
   getVoiceConnection,
@@ -15,7 +17,13 @@ import {
   findChannelById,
   findChannelByName,
 } from "./server/service/ChannelService.js";
-import { moveUsertoChannel } from "./server/manager/UserManager.js";
+import {
+  deafenUser,
+  moveUsertoChannel,
+  muteUser,
+  unDeafenUser,
+  unMuteUser,
+} from "./server/manager/UserManager.js";
 import findUserById, { findUserByName } from "./server/service/UserService.js";
 const { OpusEncoder } = pkg;
 const token = config.DISCORD_TOKEN;
@@ -36,6 +44,12 @@ client.once("ready", async () => {
       .voiceAdapterCreator,
     selfDeaf: false,
   });
+  const user = await findUserById(await server, "241600149845966860");
+  const channel = await findChannelById(
+    await server,
+    ChannelType.GuildVoice,
+    "1205854929772613632"
+  );
   // test if channel can be found by either name or id, passed
   // console.log(
   //   await findChannelById(
@@ -52,17 +66,18 @@ client.once("ready", async () => {
   //   await findUserByName(await server, "zrennare")
   // );
 
-  // test if user can be moved to a certain channel
-  moveUsertoChannel(
-    await findUserById(await server, "241600149845966860"),
-    await findChannelById(
-      await server,
-      ChannelType.GuildVoice,
-      "1205854929772613632"
-    )
-  );
+  // test if user can be moved to a certain channel, passed
+  // moveUsertoChannel(user, channel);
+
+  // test if user can be set to mute with certain reason
+  // muteUser(user, "du redest zu viel");
+  // unMuteUser(user);
+
+  // test if user can be set to deaf with certain reason
+  deafenUser(user, "du darfst nicht zuhören");
+  unDeafenUser(user);
 });
 client.on("messageCreate", (message) => {
   handleCommand(message, client);
-  handleVoiceCommand(message);
+  handleVoiceRecordCommand(message);
 });
